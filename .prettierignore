@@ -1,0 +1,6 @@
+node_modules
+dist
+playground/dist
+package-lock.json
+*.min.js
+*.min.css
