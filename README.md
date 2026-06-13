@@ -16,7 +16,9 @@
 | Компонент | Статус | Основное |
 |-----------|--------|----------|
 | **Button** | готов | `variant`, `size`, `shape`, `borderType`, иконки, loading, link (`href`) |
-| **Input** | готов | `label`, `errorMessage`, `status`, `prefix`/`suffix`, `allowClear` |
+| **Input** | готов | text-only: `label`, `errorMessage`, `status`, `prefix`/`suffix`, `allowClear` |
+| **InputPassword** | готов | пароль + `visibilityToggle` |
+| **InputNumber** | готов | `value`/`onChange` как `number \| null`, `min`/`max`/`step` |
 | **Card** | в планах | — |
 
 ## Стек
@@ -60,7 +62,10 @@ uiKit/
 │   │   │   ├── Button.variants.ts
 │   │   │   └── index.ts
 │   │   └── Input/
-│   │       ├── InputComponent.tsx
+│   │       ├── Input.tsx           # text
+│   │       ├── InputPassword.tsx
+│   │       ├── InputNumber.tsx
+│   │       ├── InputBase.tsx       # internal
 │   │       ├── Input.types.ts
 │   │       ├── Input.variants.ts
 │   │       └── index.ts
@@ -99,7 +104,7 @@ npm install /path/to/uiKit
 ```
 
 ```tsx
-import { Button, Input, cn } from '@uikit/react';
+import { Button, Input, InputPassword, InputNumber, cn } from '@uikit/react';
 import '@uikit/react/styles.css';
 ```
 
@@ -126,14 +131,14 @@ export default {
 ```ts
 // Компоненты
 export { Button, buttonVariants, buttonIconSlotClass } from './components/Button';
-export { Input, inputVariants, inputIconSlotClass, ... } from './components/Input';
+export { Input, InputPassword, InputNumber, inputVariants, ... } from './components/Input';
 
 // Утилиты и токены
 export { cn } from './utils/cn';
 export { colors, borderRadius, spacing } from './tokens';
 ```
 
-Типы: `ButtonProps`, `InputProps`.
+Типы: `ButtonProps`, `InputProps`, `InputPasswordProps`, `InputNumberProps`.
 
 ## Playground / документация
 
@@ -165,9 +170,10 @@ Playground — не Storybook, а свой лёгкий docs-сайт:
 ## Дорожная карта
 
 - [ ] Card (составной: Header, Body, Footer)
-- [ ] `helperText` у Input
-- [ ] Тёмная тема (опционально)
-
+- [ ] Modal
+- [ ] Table
+- [ ] Input.number etc.
+- [ ] Slider
 ## Лицензия
 
 Уточни лицензию перед публикацией на npm. Пока проект учебный / в разработке.

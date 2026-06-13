@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Input } from '@uikit/react';
+import { Input, InputNumber, InputPassword } from '@uikit/react';
 import { ApiTable, type ApiTableRow } from './ApiTable';
 import {
   DocApiSection,
@@ -97,12 +97,6 @@ const inputApiRows: ApiTableRow[] = [
     type: 'string',
   },
   {
-    property: 'type',
-    description: 'Нативный тип input',
-    type: `'text' | 'password' | 'email' | 'number' | ...`,
-    default: 'text',
-  },
-  {
     property: 'className',
     description: 'Классы на обёртку (label + input)',
     type: 'string',
@@ -110,6 +104,133 @@ const inputApiRows: ApiTableRow[] = [
   {
     property: 'inputClassName',
     description: 'Доп. классы только на input',
+    type: 'string',
+  },
+];
+
+const inputPasswordApiRows: ApiTableRow[] = [
+  {
+    property: 'visibilityToggle',
+    description:
+      'Кнопка показать/скрыть. Скрывается при custom prefix (left) или suffix (right)',
+    type: 'boolean',
+    default: 'true',
+  },
+  {
+    property: 'eyeIcon',
+    description: 'Иконка «показать» (пароль скрыт)',
+    type: 'ReactNode',
+  },
+  {
+    property: 'eyeIconHidden',
+    description: 'Иконка «скрыть» (пароль виден)',
+    type: 'ReactNode',
+  },
+  {
+    property: 'eyeIconClassName',
+    description: 'Tailwind-классы на кнопку toggle',
+    type: 'string',
+  },
+  {
+    property: 'eyeIconPosition',
+    description: 'Позиция кнопки внутри поля',
+    type: `'left' | 'right'`,
+    default: 'right',
+  },
+  {
+    property: 'eyeIconSize',
+    description: 'Размер иконки',
+    type: `'sm' | 'md' | 'lg'`,
+    default: 'md',
+  },
+  {
+    property: 'eyeIconColor',
+    description: 'CSS color текста/иконки',
+    type: 'string',
+  },
+  {
+    property: 'eyeIconBgColor',
+    description: 'CSS background кнопки',
+    type: 'string',
+  },
+  {
+    property: 'eyeIconBorderColor',
+    description: 'CSS border-color',
+    type: 'string',
+  },
+  {
+    property: 'eyeIconBorderRadius',
+    description: 'CSS border-radius',
+    type: 'string',
+  },
+  {
+    property: 'eyeIconBorderWidth',
+    description: 'CSS border-width',
+    type: 'string',
+  },
+  {
+    property: 'eyeIconBorderStyle',
+    description: 'CSS border-style',
+    type: 'string',
+  },
+  ...inputApiRows,
+];
+
+const inputNumberApiRows: ApiTableRow[] = [
+  {
+    property: 'value',
+    description: 'Controlled-значение',
+    type: 'number | null',
+  },
+  {
+    property: 'onChange',
+    description: 'Колбэк при изменении',
+    type: '(value: number | null) => void',
+  },
+  {
+    property: 'min',
+    description: 'Минимальное значение',
+    type: 'number',
+  },
+  {
+    property: 'max',
+    description: 'Максимальное значение',
+    type: 'number',
+  },
+  {
+    property: 'step',
+    description: 'Шаг для стрелок и нативного input',
+    type: 'number',
+  },
+  {
+    property: 'controls',
+    description: 'Кастомные стрелки ▲▼ (по умолчанию true). Скрываются при suffix',
+    type: 'boolean',
+  },
+  {
+    property: 'upIcon',
+    description: 'Иконка кнопки увеличения',
+    type: 'ReactNode',
+  },
+  {
+    property: 'downIcon',
+    description: 'Иконка кнопки уменьшения',
+    type: 'ReactNode',
+  },
+  {
+    property: 'controlsClassName',
+    description: 'Класс контейнера стрелок',
+    type: 'string',
+  },
+  ...inputApiRows.filter(
+    (row) =>
+      row.property !== 'placeholder' &&
+      row.property !== 'allowClear' &&
+      row.property !== 'onClear',
+  ),
+  {
+    property: 'placeholder',
+    description: 'Подсказка в пустом поле',
     type: 'string',
   },
 ];
@@ -143,12 +264,43 @@ function AllowClearWithSuffixDemo() {
   );
 }
 
+function InputNumberDemo() {
+  const [value, setValue] = useState<number | null>(1000);
+
+  return (
+    <InputNumber
+      className="max-w-xs"
+      label="Сумма"
+      value={value}
+      onChange={setValue}
+      min={0}
+      max={10000}
+      step={100}
+      placeholder="0"
+    />
+  );
+}
+
+function InputPasswordClearDemo() {
+  const [value, setValue] = useState('secret');
+
+  return (
+    <InputPassword
+      className="max-w-xs"
+      allowClear
+      value={value}
+      onChange={(event) => setValue(event.target.value)}
+      placeholder="Пароль"
+    />
+  );
+}
+
 export function InputDoc() {
   return (
     <>
       <DocHeader
         title="Input"
-        description="Текстовое поле с label, размерами и вариантами обводки. Подпись связана с полем через htmlFor и id."
+        description="Текстовое поле (только text). Для пароля и чисел — InputPassword и InputNumber."
       />
 
       <DocSection
@@ -170,7 +322,7 @@ export function InputDoc() {
           <Input
             className="max-w-xs"
             label="Email"
-            type="email"
+            autoComplete="email"
             placeholder="you@example.com"
           />
         </DocRow>
@@ -221,17 +373,16 @@ export function InputDoc() {
           <Input
             className="max-w-xs"
             label="Email"
-            type="email"
+            autoComplete="email"
             defaultValue="not-an-email"
             errorMessage="Неверный формат email"
           />
         </DocRow>
         <DocDivider />
         <DocRow label="без label — только ошибка">
-          <Input
+          <InputPassword
             className="max-w-xs"
             placeholder="Пароль"
-            type="password"
             errorMessage="Минимум 8 символов"
           />
         </DocRow>
@@ -287,11 +438,11 @@ export function InputDoc() {
         </DocRow>
         <DocDivider />
         <DocRow label="suffix">
-          <Input
+          <InputNumber
             className="max-w-xs"
             suffix={<span>₽</span>}
+            defaultValue={0}
             placeholder="0"
-            type="number"
           />
         </DocRow>
         <DocDivider />
@@ -326,6 +477,67 @@ export function InputDoc() {
         <DocDivider />
         <DocRow label="allowClear + suffix → clear скрыт">
           <AllowClearWithSuffixDemo />
+        </DocRow>
+      </DocSection>
+
+      <DocSection
+        id="input-password"
+        title="InputPassword"
+        description="Пароль с visibilityToggle. eyeIcon* кастомизирует кнопку. prefix/suffix на той же стороне скрывают toggle."
+      >
+        <DocRow label="с toggle">
+          <InputPassword
+            className="max-w-xs"
+            label="Пароль"
+            placeholder="••••••••"
+          />
+        </DocRow>
+        <DocDivider />
+        <DocRow label="eyeIcon + стили">
+          <InputPassword
+            className="max-w-xs"
+            placeholder="Кастомная кнопка"
+            eyeIcon={<span className="text-[10px] font-bold">SHOW</span>}
+            eyeIconHidden={<span className="text-[10px] font-bold">HIDE</span>}
+            eyeIconClassName="rounded-md px-1"
+            eyeIconColor="#3e5c4f"
+            eyeIconBgColor="#f1efe8"
+            eyeIconBorderWidth="1px"
+            eyeIconBorderStyle="solid"
+            eyeIconBorderColor="#d5d0c4"
+            eyeIconBorderRadius="6px"
+            eyeIconSize="lg"
+          />
+        </DocRow>
+        <DocDivider />
+        <DocRow label='eyeIconPosition="left"'>
+          <InputPassword
+            className="max-w-xs"
+            eyeIconPosition="left"
+            placeholder="Иконка слева"
+          />
+        </DocRow>
+        <DocDivider />
+        <DocRow label="visibilityToggle={false}">
+          <InputPassword
+            className="max-w-xs"
+            visibilityToggle={false}
+            placeholder="Без кнопки"
+          />
+        </DocRow>
+        <DocDivider />
+        <DocRow label="allowClear + toggle">
+          <InputPasswordClearDemo />
+        </DocRow>
+      </DocSection>
+
+      <DocSection
+        id="input-number"
+        title="InputNumber"
+        description="Числовое поле: value/onChange как number | null. Кастомные стрелки вместо нативных, min/max/step."
+      >
+        <DocRow label="controlled">
+          <InputNumberDemo />
         </DocRow>
       </DocSection>
 
@@ -366,24 +578,28 @@ export function InputDoc() {
         </DocRow>
       </DocSection>
 
-      <DocSection
-        id="types"
-        title="Types"
-        description="Нативный HTML-атрибут type."
-      >
-        <div className="flex max-w-xs flex-col gap-3">
-          <Input type="text" placeholder="text" />
-          <Input type="password" placeholder="password" />
-          <Input type="email" placeholder="email" />
-        </div>
-      </DocSection>
-
       <DocApiSection
         id="api"
         componentName="Input"
-        note="Стандартные атрибуты input, кроме size. allowClear требует controlled-режим (value + onChange). suffix отключает allowClear."
+        note="Только text. Нет пропа type — используй InputPassword или InputNumber. allowClear требует controlled (value + onChange). suffix отключает allowClear."
       >
         <ApiTable rows={inputApiRows} />
+      </DocApiSection>
+
+      <DocApiSection
+        id="api-password"
+        componentName="InputPassword"
+        note="Наследует пропы Input. HTML type задаётся внутри компонента."
+      >
+        <ApiTable rows={inputPasswordApiRows} />
+      </DocApiSection>
+
+      <DocApiSection
+        id="api-number"
+        componentName="InputNumber"
+        note="value и onChange работают с number | null. Пустое поле → null. suffix отключает controls."
+      >
+        <ApiTable rows={inputNumberApiRows} />
       </DocApiSection>
     </>
   );

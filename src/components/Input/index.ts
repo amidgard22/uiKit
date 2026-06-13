@@ -1,5 +1,13 @@
-export { Input } from './InputComponent';
-export type { InputProps } from './Input.types';
+export { Input } from './Input';
+export { InputPassword } from './InputPassword';
+export { InputNumber } from './InputNumber';
+
+export type {
+  InputProps,
+  InputPasswordProps,
+  InputNumberProps,
+} from './Input.types';
+
 export {
   inputAffixWrapperVariants,
   inputClearButtonClass,

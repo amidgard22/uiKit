@@ -30,4 +30,26 @@
   ::selection {
     @apply bg-primary/20 text-text;
   }
+
+  /* Скрыть нативный глаз браузера в type=password (Edge/Chrome) */
+  .uikit-password-field::-ms-reveal,
+  .uikit-password-field::-ms-clear {
+    display: none;
+  }
+
+  .uikit-password-field::-webkit-textfield-decoration-container {
+    display: none !important;
+  }
+
+  /* Скрыть нативные стрелки type=number (Chrome/Safari/Firefox) */
+  .uikit-number-field::-webkit-outer-spin-button,
+  .uikit-number-field::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .uikit-number-field {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
 }

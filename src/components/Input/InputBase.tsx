@@ -10,9 +10,9 @@ import {
   resolveInputState,
 } from './Input.variants';
 
-import type { InputProps } from './Input.types';
+import type { InputBaseProps } from './Input.types';
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
+export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(
   (
     {
       className,
@@ -29,9 +29,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       status,
       prefix,
       suffix,
+      leadingSlot,
+      trailingSlot,
+      flushTrailing,
       allowClear,
       onClear,
       inputClassName,
+      inputType,
       value,
       onChange,
       readOnly,
@@ -48,7 +52,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       value !== undefined && value !== null && String(value).length > 0;
     const showClear =
       allowClear && !disabled && !readOnly && !suffix && hasValue;
-    const hasAffix = Boolean(prefix || suffix || allowClear);
+    const hasAffix = Boolean(
+      prefix || suffix || leadingSlot || trailingSlot || allowClear,
+    );
     const variantProps = {
       variant,
       size,
@@ -69,6 +75,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <input
         ref={ref}
         id={inputId}
+        type={inputType}
         className={cn(
           hasAffix ? inputAffixFieldClass : inputVariants(variantProps),
           inputClassName,
@@ -98,12 +105,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
         {hasAffix ? (
-          <div className={cn(inputAffixWrapperVariants(variantProps))}>
+          <div
+            className={cn(
+              inputAffixWrapperVariants(variantProps),
+              flushTrailing && 'gap-1 overflow-hidden pr-0',
+            )}
+          >
             {prefix && (
               <span className={inputIconSlotClass} aria-hidden="true">
                 {prefix}
               </span>
             )}
+            {leadingSlot}
             {inputElement}
             {suffix && (
               <span className={inputIconSlotClass} aria-hidden="true">
@@ -118,9 +131,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 className={inputClearButtonClass}
                 onClick={handleClear}
               >
-                x
+                ✕
               </button>
             )}
+            {trailingSlot}
           </div>
         ) : (
           inputElement
@@ -138,4 +152,4 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   },
 );
 
-Input.displayName = 'Input';
+InputBase.displayName = 'InputBase';

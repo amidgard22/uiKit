@@ -101,6 +101,38 @@ export const inputAffixFieldClass = [
 export const inputIconSlotClass =
   'inline-flex size-[1em] shrink-0 items-center justify-center leading-none text-text-muted [&_svg]:size-[1em]';
 
+export const inputPasswordNativeRevealHiddenClass = 'uikit-password-field';
+
+export const inputNumberNativeSpinnerHiddenClass = 'uikit-number-field';
+
+export const inputNumberControlsClass = [
+  'flex flex-col self-stretch overflow-hidden border-l border-border/60 bg-surface-muted/60',
+].join(' ');
+
+export const inputNumberControlsSizeClass = {
+  sm: 'w-6',
+  md: 'w-7',
+  lg: 'w-8',
+} as const;
+
+export const inputNumberControlButtonClass = [
+  'flex flex-1 min-h-0 items-center justify-center',
+  'text-text-muted transition-colors',
+  'hover:bg-primary/10 hover:text-primary',
+  'active:bg-primary/15',
+  'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-inset',
+  'disabled:pointer-events-none disabled:opacity-25',
+  '[&_svg]:size-2.5',
+].join(' ');
+
+export const inputNumberControlButtonDownClass = 'border-t border-border/60';
+
+export const inputEyeIconSizeClass = {
+  sm: 'text-xs',
+  md: 'text-sm',
+  lg: 'text-lg',
+} as const;
+
 export const inputClearButtonClass = [
   inputIconSlotClass,
   'cursor-pointer rounded-sm text-text-subtle transition-colors',
